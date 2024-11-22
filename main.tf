@@ -96,8 +96,6 @@ OVN_CTL_OPTS=" \\
      --ovn-northd-sb-db=tcp:10.238.10.30:6642,tcp:10.238.10.31:6642,tcp:10.238.10.32:6642"
 EOF
 
-systemctl start ovn-central
-
 sudo ovs-vsctl set open_vswitch . \
    external_ids:ovn-remote=tcp:10.238.10.30:6642,tcp:10.238.10.31:6642,tcp:10.238.10.32:6642 \
    external_ids:ovn-encap-type=geneve \
@@ -111,9 +109,12 @@ network:
     incusbr0:
       dhcp4: no
       addresses: 
-        - 10.200.0.20/16
+        - 10.200.0.1/16
+  
 EOF
+
 netplan apply
+systemctl start ovn-central
 
 cat <<EOF | incus admin init --preseed
 config:
@@ -145,6 +146,12 @@ cluster:
   cluster_token: ""
   cluster_certificate_path: ""
 EOF
+
+sysctl -w net.ipv4.ip_forward=1
+systemctl start ovn-central
+iptables -t nat -A POSTROUTING -s 10.200.0.0/16 ! -o incusbr0 -j MASQUERADE
+sudo iptables -A FORWARD -i incusbr0 -o ens5 -j ACCEPT
+sudo iptables -A FORWARD -i incusbr0 -o ens5 -j ACCEPT
 
 EOFUD
 
@@ -227,12 +234,12 @@ OVN_CTL_OPTS=" \\
      --ovn-northd-sb-db=tcp:10.238.10.30:6642,tcp:10.238.10.31:6642,tcp:10.238.10.32:6642"
 EOF
 
-systemctl start ovn-central
 
 sudo ovs-vsctl set open_vswitch . \
    external_ids:ovn-remote=tcp:10.238.10.30:6642,tcp:10.238.10.31:6642,tcp:10.238.10.32:6642 \
    external_ids:ovn-encap-type=geneve \
    external_ids:ovn-encap-ip=$LOCAL_IP
+
 
 cat <<-EOF > /etc/netplan/incusbr0.yaml
 network:
@@ -242,9 +249,15 @@ network:
     incusbr0:
       dhcp4: no
       addresses: 
-        - 10.200.0.20/16
+        - 10.200.0.1/16
 EOF
 netplan apply
+
+sysctl -w net.ipv4.ip_forward=1
+systemctl start ovn-central
+iptables -t nat -A POSTROUTING -s 10.200.0.0/16 ! -o incusbr0 -j MASQUERADE
+sudo iptables -A FORWARD -i incusbr0 -o ens5 -j ACCEPT
+sudo iptables -A FORWARD -i incusbr0 -o ens5 -j ACCEPT
 
 EOFUD
 
