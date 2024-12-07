@@ -268,7 +268,7 @@ EOFUD
 
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCpBRjx6C0ArkNZjICrSu54mgQTABkE5Jjj3OeGtEbGVPkc0PX2luJfifTg4k8Oj9TJWjHaT1BULwZdw331MqWHYUcrv6dHqDUWNv5HCvgPAzOmEq3jmwtALXEMVPs6swJjKnHMQLKZD1YgiefEmDmiebB7L0mQbsh791aFTgShxKVciLMv5DTBj/fbeoVRk/SG41Ziso+A1a2H/S2uB/nabe6fzIV52lwYsGL3EB4isRfhucXrsMIDnt3tat8VaOP4vE8q4d4rqZJpse21WAfhadYbBlzS98IqcJ0O7LkTPTiFT/c5+j4XyUFEh6IqUbIJfgNtT4NOlIDrzf8pwsRQJpxkkIVtaq1QFUmAwNZ7NkHv03uBb8wDdGv6oG+wRjIw9bCZWbM7LrNYtl0elmcoRfDrPHoonJju3yK2ct559xkaNtbUyVFZ51p6Sag3zm79YLR9oBF7svSlbaqZkGmTeocMvUk9Gicyq5Z8oMjY1vE0DTyBFDelKJajlnP6P2k= dsuser@incus-aws"
+  public_key = "insert your public key here"
 }
 
 # Create a VPC
